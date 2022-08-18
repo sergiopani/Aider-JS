@@ -117,9 +117,63 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/index.ts":[function(require,module,exports) {
-console.log("Funcionando!");
-},{}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+})({"src/models/User.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.User = void 0;
+
+var User =
+/** @class */
+function () {
+  //Data is private becaouse we don't want acces 
+  function User(data) {
+    this.data = data;
+    this.events = {};
+  } //return the propiety that is given in parameter
+
+
+  User.prototype.get = function (propName) {
+    return this.data[propName];
+  }; //Change the data updating from the object in parameter
+
+
+  User.prototype.set = function (update) {
+    //Copy propieties of the first object to the second object
+    Object.assign(this.data, update);
+  }; //when we change somthing on User we notify oter parts of our application
+  //Eventing => 
+
+
+  User.prototype.on = function (eventName, callback) {
+    //Store all the events and then trigger in the future
+    //If event name already exists it assing an 
+    var handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  };
+
+  return User;
+}();
+
+exports.User = User;
+},{}],"src/index.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var User_1 = require("./models/User");
+
+var user = new User_1.User({});
+user.on('change', function () {});
+user.on('change', function () {});
+user.on('click', function () {});
+console.log(user);
+},{"./models/User":"src/models/User.ts"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -147,7 +201,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61417" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57582" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
