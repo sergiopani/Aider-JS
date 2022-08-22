@@ -1,6 +1,8 @@
+import axios, { AxiosResponse } from "axios";
 
 //Describe the propieties that user is going to have
 interface UserProps {
+    id?: number;
     name?:string;
     age?:number;
 }
@@ -34,6 +36,31 @@ export class User {
         handlers.push(callback);
         this.events[eventName] = handlers;
     }
+
+    trigger(eventName: string): void {
+        //Check if we already have some events with this event name
+        const handlers = this.events[eventName];
+
+        //If handelers is undefined or thre is no handelers
+        if(!handlers || handlers.length === 0){
+            return;
+        }
+
+        //iterate throught the handelers array and exacute the callback
+        handlers.forEach(callback => { 
+            callback();
+        })
+    }
+
+    //Fetch information from backend
+    fetch(): void{
+        //Make arequest to our json server
+        axios.get(`http://localhost:3000/users/${this.get('id')}`)
+        .then((response: AxiosResponse): void => {
+            this.set(response.data);
+        })
+    }
+    //Save information from user to the backend
 
 
 }
