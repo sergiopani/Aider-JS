@@ -12,6 +12,7 @@ type Callback = () => void
 
 export class User {
     events: {[key: string]: Callback[]} = {}
+
     //Data is private becaouse we don't want acces 
     constructor(private data: UserProps){}
 
@@ -61,6 +62,15 @@ export class User {
         })
     }
     //Save information from user to the backend
-
+    save(): void {
+        const id = this.get('id');
+        if(id){
+            //Put 
+            axios.put(`http://localhost:3000/users/${id}`, this.data);
+        }else{
+            //Post
+            axios.post('http://localhost:3000/users', this.data);
+        }
+    }
 
 }

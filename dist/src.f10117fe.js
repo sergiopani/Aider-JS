@@ -4543,7 +4543,7 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults/index.js","./cancel/CanceledError":"node_modules/axios/lib/cancel/CanceledError.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./env/data":"node_modules/axios/lib/env/data.js","./helpers/toFormData":"node_modules/axios/lib/helpers/toFormData.js","../lib/core/AxiosError":"node_modules/axios/lib/core/AxiosError.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"node_modules/axios/lib/helpers/isAxiosError.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/index.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -4555,11 +4555,96 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.User = void 0;
 
 var axios_1 = __importDefault(require("axios"));
 
-axios_1.default.get('http://localhost:3000/users/1');
-},{"axios":"node_modules/axios/index.js"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var User =
+/** @class */
+function () {
+  //Data is private becaouse we don't want acces 
+  function User(data) {
+    this.data = data;
+    this.events = {};
+  } //return the propiety that is given in parameter
+
+
+  User.prototype.get = function (propName) {
+    return this.data[propName];
+  }; //Change the data updating from the object in parameter
+
+
+  User.prototype.set = function (update) {
+    //Copy propieties of the first object to the second object
+    Object.assign(this.data, update);
+  }; //when we change somthing on User we notify oter parts of our application
+  //Eventing => 
+
+
+  User.prototype.on = function (eventName, callback) {
+    //Store all the events and then trigger in the future
+    //If event name already exists it assing an 
+    var handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  };
+
+  User.prototype.trigger = function (eventName) {
+    //Check if we already have some events with this event name
+    var handlers = this.events[eventName]; //If handelers is undefined or thre is no handelers
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    } //iterate throught the handelers array and exacute the callback
+
+
+    handlers.forEach(function (callback) {
+      callback();
+    });
+  }; //Fetch information from backend
+
+
+  User.prototype.fetch = function () {
+    var _this = this; //Make arequest to our json server
+
+
+    axios_1.default.get("http://localhost:3000/users/".concat(this.get('id'))).then(function (response) {
+      _this.set(response.data);
+    });
+  }; //Save information from user to the backend
+
+
+  User.prototype.save = function () {
+    var id = this.get('id');
+
+    if (id) {
+      //Put 
+      axios_1.default.put("http://localhost:3000/users/".concat(id), this.data);
+    } else {
+      //Post
+      axios_1.default.post('http://localhost:3000/users', this.data);
+    }
+  };
+
+  return User;
+}();
+
+exports.User = User;
+},{"axios":"node_modules/axios/index.js"}],"src/index.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var User_1 = require("./models/User");
+
+var user = new User_1.User({
+  name: 'NEW record',
+  age: 0
+});
+user.save();
+},{"./models/User":"src/models/User.ts"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
