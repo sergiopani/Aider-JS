@@ -7,7 +7,7 @@ export class Eventing{
   events: {[key: string]: Callback[]} = {}
   //when we change somthing on User we notify oter parts of our application
     //Eventing => 
-    on(eventName: string, callback: Callback): void {
+  on(eventName: string, callback: Callback): void {
       //Store all the events and then trigger in the future
       //If event name already exists it assing an 
       const handlers = this.events[eventName] || [];
@@ -28,6 +28,6 @@ export class Eventing{
     handlers.forEach(callback => { 
         callback();
     })
-}
+  }
 
 }

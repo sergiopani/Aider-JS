@@ -1,17 +1,15 @@
 import axios, { AxiosPromise} from "axios";
 
 interface HasId{
-  id:number
+  id?:number
 }
 
-
-// ** This class is going to work only with USER CLASS
 // Gneric type class
 export class Sync <T extends HasId> {
   
   constructor(public rootUrl: string){}
 
-  //* Returns a promise object
+  
   //Fetch information from backend
   
   fetch(id:number): AxiosPromise{
@@ -24,7 +22,7 @@ export class Sync <T extends HasId> {
     // if the object data has the id
     const {id} = data;
 
-    if(id){
+    if (id) {
         //Put 
         return axios.put(`${this.rootUrl}/${id}`, data);
     }else{
