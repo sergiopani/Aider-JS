@@ -1,23 +1,35 @@
-import { Eventing } from './Eventing'
+import { Eventing } from './Eventing';
 import { Sync } from './Sync';
 import { Attributes } from './Attributes';
 //Describe the propieties that user is going to have
 export interface UserProps {
     id?: number;
-    name?:string;
-    age?:number;
+    name?: string;
+    age?: number;
 }
 
-const localhost = 'http://localhost:3000/users'
+const localhost = 'http://localhost:3000/users';
 
-export class User {   
+export class User {
     //Use our eventing class with composition
     public events: Eventing = new Eventing();
-    public sync: Sync<UserProps> = new Sync(localhost); 
+    public sync: Sync<UserProps> = new Sync(localhost);
     public attributes: Attributes<UserProps>;
 
-    constructor(attrs: UserProps){
-        this.attributes = new Attributes<UserProps>(attrs)
+    constructor(attrs: UserProps) {
+        this.attributes = new Attributes<UserProps>(attrs);
+    }
+
+    get on() {//Im not tryning to call a function only take the reference
+        return this.events.on; 
+    }
+
+    get trigger() {
+        return this.events.trigger;
+    }
+
+    get get() {
+        return this.attributes.get;
     }
 
 }
