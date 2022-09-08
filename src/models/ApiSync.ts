@@ -5,7 +5,7 @@ interface HasId {
 }
 
 // Gneric type class
-export class Sync<T extends HasId> {
+export class ApiSync<T extends HasId> {
 
 	constructor(public rootUrl: string) { }
 

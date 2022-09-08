@@ -17,6 +17,11 @@ export class Attributes<T>{
 		Object.assign(this.data, update);
 	}
 
+	//Return all the values
+	getAll(): T {
+		return this.data;
+	}
+
 
 }
 

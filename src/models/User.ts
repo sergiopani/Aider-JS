@@ -1,6 +1,7 @@
-import { Eventing } from './Eventing';
-import { Sync } from './Sync';
-import { Attributes } from './Attributes';
+import { Model } from "./Model";
+import { Attributes } from "./Attributes";
+import { ApiSync } from "./ApiSync";
+import { Eventing } from "./Eventing";
 //Describe the propieties that user is going to have
 export interface UserProps {
     id?: number;
@@ -8,28 +9,17 @@ export interface UserProps {
     age?: number;
 }
 
-const localhost = 'http://localhost:3000/users';
+const rootUrl = 'http://localhost:3000/users';
 
-export class User {
-    //Use our eventing class with composition
-    public events: Eventing = new Eventing();
-    public sync: Sync<UserProps> = new Sync(localhost);
-    public attributes: Attributes<UserProps>;
-
-    constructor(attrs: UserProps) {
-        this.attributes = new Attributes<UserProps>(attrs);
+export class User extends Model<UserProps> {
+    static buildUser(attrs: UserProps): User {
+        return new User(
+            new Attributes<UserProps>(attrs),
+            new Eventing(),
+            new ApiSync<UserProps>(rootUrl)
+        );
     }
 
-    get on() {//Im not tryning to call a function only take the reference
-        return this.events.on; 
-    }
 
-    get trigger() {
-        return this.events.trigger;
-    }
-
-    get get() {
-        return this.attributes.get;
-    }
 
 }
