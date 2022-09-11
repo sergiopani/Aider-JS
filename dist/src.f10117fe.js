@@ -117,135 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/models/Model.ts":[function(require,module,exports) {
-"use strict";
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Model = void 0;
-
-var Model = /*#__PURE__*/function () {
-  function Model(attributes, events, sync) {
-    _classCallCheck(this, Model);
-
-    this.attributes = attributes;
-    this.events = events;
-    this.sync = sync;
-  }
-
-  _createClass(Model, [{
-    key: "on",
-    get: function get() {
-      return this.events.on;
-    }
-  }, {
-    key: "trigger",
-    get: function get() {
-      return this.events.trigger;
-    }
-  }, {
-    key: "get",
-    get: function get() {
-      return this.attributes.get;
-    }
-  }, {
-    key: "set",
-    value: function set(update) {
-      //Call atribute method of set
-      this.attributes.set(update);
-      this.events.trigger('change');
-    }
-  }, {
-    key: "fetch",
-    value: function fetch() {
-      var _this = this;
-
-      var id = this.attributes.get('id'); //If id actually dont exists
-
-      if (typeof id !== 'number') {
-        throw new Error('Cannot fetch without an id!');
-      }
-
-      this.sync.fetch(id).then(function (response) {
-        //Set the information
-        _this.set(response.data);
-      });
-    } //Save all the propieties of the current user
-
-  }, {
-    key: "save",
-    value: function save() {
-      var _this2 = this;
-
-      //Inform the application that the 
-      this.sync.save(this.attributes.getAll()).then(function (response) {
-        _this2.trigger('save');
-      }).catch(function () {
-        _this2.trigger('error');
-      });
-    }
-  }]);
-
-  return Model;
-}();
-
-exports.Model = Model;
-},{}],"src/models/Attributes.ts":[function(require,module,exports) {
-"use strict";
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Attributes = void 0;
-
-var Attributes = /*#__PURE__*/function () {
-  //Data is private becaouse we don't want acces 
-  function Attributes(data) {
-    var _this = this;
-
-    _classCallCheck(this, Attributes);
-
-    this.data = data; //return the propiety that is given in parameter
-    //Constrain -> K can only be one of the types of T
-
-    this.get = function (key) {
-      return _this.data[key];
-    };
-  } //Change the data updating from the object in parameter
-
-
-  _createClass(Attributes, [{
-    key: "set",
-    value: function set(update) {
-      //Copy propieties of the first object to the second object
-      Object.assign(this.data, update);
-    } //Return all the values
-
-  }, {
-    key: "getAll",
-    value: function getAll() {
-      return this.data;
-    }
-  }]);
-
-  return Attributes;
-}();
-
-exports.Attributes = Attributes;
-},{}],"node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
+})({"node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -4671,7 +4543,232 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults/index.js","./cancel/CanceledError":"node_modules/axios/lib/cancel/CanceledError.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./env/data":"node_modules/axios/lib/env/data.js","./helpers/toFormData":"node_modules/axios/lib/helpers/toFormData.js","../lib/core/AxiosError":"node_modules/axios/lib/core/AxiosError.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"node_modules/axios/lib/helpers/isAxiosError.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/ApiSync.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/Eventing.ts":[function(require,module,exports) {
+"use strict";
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Eventing = void 0;
+
+var Eventing = /*#__PURE__*/_createClass(function Eventing() {
+  var _this = this;
+
+  _classCallCheck(this, Eventing);
+
+  this.events = {}; //when we change somthing on User we notify oter parts of our application
+  //Eventing => 
+
+  this.on = function (eventName, callback) {
+    //Store all the events and then trigger in the future
+    //If event name already exists it assing an 
+    var handlers = _this.events[eventName] || [];
+    handlers.push(callback);
+    _this.events[eventName] = handlers;
+  };
+
+  this.trigger = function (eventName) {
+    //Check if we already have some events with this event name
+    var handlers = _this.events[eventName]; //If handelers is undefined or thre is no handelers
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    } //iterate throught the handelers array and exacute the callback
+
+
+    handlers.forEach(function (callback) {
+      callback();
+    });
+  };
+});
+
+exports.Eventing = Eventing;
+},{}],"src/models/Collection.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Collection = void 0;
+
+var axios_1 = __importDefault(require("axios"));
+
+var Eventing_1 = require("./Eventing");
+
+var Collection = /*#__PURE__*/function () {
+  function Collection(rootUrl, deserialize) {
+    _classCallCheck(this, Collection);
+
+    this.rootUrl = rootUrl;
+    this.deserialize = deserialize;
+    this.models = [];
+    this.events = new Eventing_1.Eventing();
+  }
+
+  _createClass(Collection, [{
+    key: "on",
+    get: function get() {
+      return this.events.on;
+    }
+  }, {
+    key: "trigger",
+    get: function get() {
+      return this.events.trigger;
+    }
+  }, {
+    key: "fetch",
+    value: function fetch() {
+      var _this = this;
+
+      axios_1.default.get(this.rootUrl).then(function (response) {
+        response.data.forEach(function (value) {
+          _this.models.push(_this.deserialize(value));
+        });
+
+        _this.trigger('change');
+      });
+    }
+  }]);
+
+  return Collection;
+}();
+
+exports.Collection = Collection;
+},{"axios":"node_modules/axios/index.js","./Eventing":"src/models/Eventing.ts"}],"src/models/Model.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Model = void 0;
+
+var Model = /*#__PURE__*/function () {
+  function Model(attributes, events, sync) {
+    _classCallCheck(this, Model);
+
+    this.attributes = attributes;
+    this.events = events;
+    this.sync = sync;
+    this.on = this.events.on;
+    this.trigger = this.events.trigger;
+    this.get = this.attributes.get;
+  }
+
+  _createClass(Model, [{
+    key: "set",
+    value: function set(update) {
+      //Call atribute method of set
+      this.attributes.set(update);
+      this.events.trigger('change');
+    }
+  }, {
+    key: "fetch",
+    value: function fetch() {
+      var _this = this;
+
+      var id = this.attributes.get('id'); //If id actually dont exists
+
+      if (typeof id !== 'number') {
+        throw new Error('Cannot fetch without an id!');
+      }
+
+      this.sync.fetch(id).then(function (response) {
+        //Set the information
+        _this.set(response.data);
+      });
+    } //Save all the propieties of the current user
+
+  }, {
+    key: "save",
+    value: function save() {
+      var _this2 = this;
+
+      //Inform the application that the 
+      this.sync.save(this.attributes.getAll()).then(function (response) {
+        _this2.trigger('save');
+      }).catch(function () {
+        _this2.trigger('error');
+      });
+    }
+  }]);
+
+  return Model;
+}();
+
+exports.Model = Model;
+},{}],"src/models/Attributes.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Attributes = void 0;
+
+var Attributes = /*#__PURE__*/function () {
+  //Data is private becaouse we don't want acces 
+  function Attributes(data) {
+    var _this = this;
+
+    _classCallCheck(this, Attributes);
+
+    this.data = data; //return the propiety that is given in parameter
+    //Constrain -> K can only be one of the types of T
+
+    this.get = function (key) {
+      return _this.data[key];
+    };
+  } //Change the data updating from the object in parameter
+
+
+  _createClass(Attributes, [{
+    key: "set",
+    value: function set(update) {
+      //Copy propieties of the first object to the second object
+      Object.assign(this.data, update);
+    } //Return all the values
+
+  }, {
+    key: "getAll",
+    value: function getAll() {
+      return this.data;
+    }
+  }]);
+
+  return Attributes;
+}();
+
+exports.Attributes = Attributes;
+},{}],"src/models/ApiSync.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4729,53 +4826,7 @@ var ApiSync = /*#__PURE__*/function () {
 }();
 
 exports.ApiSync = ApiSync;
-},{"axios":"node_modules/axios/index.js"}],"src/models/Eventing.ts":[function(require,module,exports) {
-"use strict";
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Eventing = void 0;
-
-var Eventing = /*#__PURE__*/_createClass(function Eventing() {
-  var _this = this;
-
-  _classCallCheck(this, Eventing);
-
-  this.events = {}; //when we change somthing on User we notify oter parts of our application
-  //Eventing => 
-
-  this.on = function (eventName, callback) {
-    //Store all the events and then trigger in the future
-    //If event name already exists it assing an 
-    var handlers = _this.events[eventName] || [];
-    handlers.push(callback);
-    _this.events[eventName] = handlers;
-  };
-
-  this.trigger = function (eventName) {
-    //Check if we already have some events with this event name
-    var handlers = _this.events[eventName]; //If handelers is undefined or thre is no handelers
-
-    if (!handlers || handlers.length === 0) {
-      return;
-    } //iterate throught the handelers array and exacute the callback
-
-
-    handlers.forEach(function (callback) {
-      callback();
-    });
-  };
-});
-
-exports.Eventing = Eventing;
-},{}],"src/models/User.ts":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -4826,7 +4877,12 @@ var User = /*#__PURE__*/function (_Model_1$Model) {
     return _super.apply(this, arguments);
   }
 
-  _createClass(User, null, [{
+  _createClass(User, [{
+    key: "isAdminUser",
+    value: function isAdminUser() {
+      return this.get('id') === 1;
+    }
+  }], [{
     key: "buildUser",
     value: function buildUser(attrs) {
       return new User(new Attributes_1.Attributes(attrs), new Eventing_1.Eventing(), new ApiSync_1.ApiSync(rootUrl));
@@ -4844,17 +4900,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var Collection_1 = require("./models/Collection");
+
 var User_1 = require("./models/User");
 
-var user = User_1.User.buildUser({
-  id: 1
-}); //console.log(user.get('name'))
-
-user.on('change', function () {
-  console.log(user);
+var collection = new Collection_1.Collection("http://localhost:3000/users", function (json) {
+  return User_1.User.buildUser(json);
 });
-user.fetch();
-},{"./models/User":"src/models/User.ts"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+collection.fetch();
+collection.on("change", function () {
+  console.log("Collection has been changed");
+});
+console.log(collection.models);
+},{"./models/Collection":"src/models/Collection.ts","./models/User":"src/models/User.ts"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -4882,7 +4940,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63324" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63967" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
